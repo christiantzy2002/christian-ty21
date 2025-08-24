@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUCK RETURN LOGBOOK - MONDE NISSIN CORPORATION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Monde_Nissin_logo.svg" alt="Monde Nissin Logo" id="logo">
+            <div class="titles">
+                <h1>Truck Return Logbook</h1>
+                <h2>Monde Nissin Corporation</h2>
+            </div>
+        </div>
+    </header>
+    <nav class="tabs">
+        <button id="addTab" class="tab-button active">Add Entry</button>
+        <button id="viewTab" class="tab-button">View Logs</button>
+    </nav>
+    <main>
+        <div id="addModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add New Entry</h2>
+                <form id="logForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Date Received:</label>
+                            <input type="text" id="dateReceived" readonly>
+                        </div>
+                        <div class="form-group time-section">
+                            <label>Arrival Time:</label>
+                            <div class="time-group">
+                                <input type="text" id="hour" placeholder="HH" maxlength="2" pattern="(0[1-9]|1[0-2])" required>
+                                :
+                                <input type="text" id="minute" placeholder="MM" maxlength="2" pattern="[0-5][0-9]" required>
+                                <select id="ampm" required>
+                                    <option value="AM">AM</option>
+                                    <option value="PM">PM</option>
+                                </select>
+                            </div>
+                            <button type="button" id="setCurrentTime">Set Current Time</button>
+                        </div>
+                        <div class="form-group">
+                            <label for="truckerSelect">Trucker:</label>
+                            <select id="truckerSelect" required>
+                                <option value="">Select Trucker</option>
+                                <option value="DREAM">DREAM</option>
+                                <option value="LLEYTON">LLEYTON</option>
+                                <option value="AIR SPEED">AIR SPEED</option>
+                                <option value="PCL">PCL</option>
+                                <option value="FAST">FAST</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <div id="truckerOther" style="display:none; margin-top:5px;">
+                                <input type="text" id="truckerInput" placeholder="Specify Other">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="plateNo">Plate No.:</label>
+                            <input type="text" id="plateNo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cluster">Cluster:</label>
+                            <input type="text" id="cluster" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="crates">Crates:</label>
+                            <input type="text" id="crates" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bo">BO:</label>
+                            <input type="text" id="bo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="boCheckBySelect">BO Checked By:</label>
+                            <select id="boCheckBySelect" required>
+                                <option value="">Select</option>
+                                <option value="C.Datingaling">C.Datingaling</option>
+                                <option value="A. Gonzales">A. Gonzales</option>
+                                <option value="C. Factor">C. Factor</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <div id="boOther" style="display:none; margin-top:5px;">
+                                <input type="text" id="boInput" placeholder="Specify Other">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks:</label>
+                            <textarea id="remarks"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit">Add Entry</button>
+                </form>
+            </div>
+        </div>
+        <div id="viewModal" class="modal">
+            <div class="modal-content view-modal-content">
+                <span class="close">&times;</span>
+                <h2>Log Entries</h2>
+                <section id="logTableSection">
+                    <div class="table-actions">
+                        <button id="exportExcel">Export to Excel</button>
+                        <button id="clearAllData">Clear All Data</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="logTable">
+                            <thead>
+                                <tr>
+                                    <th>Date Received</th>
+                                    <th>Arrival Time</th>
+                                    <th>Trucker</th>
+                                    <th>Plate No.</th>
+                                    <th>Cluster</th>
+                                    <th>Crates</th>
+                                    <th>BO</th>
+                                    <th>BO Checked By</th>
+                                    <th>Remarks</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Edit Entry</h2>
+                <form id="editForm">
+                    <div class="form-group">
+                        <label>Date Received:</label>
+                        <input type="date" id="editDateReceived">
+                    </div>
+                    <div class="form-group">
+                        <label>Arrival Time:</label>
+                        <div class="time-group">
+                            <input type="text" id="editHour" placeholder="HH" maxlength="2" pattern="(0[1-9]|1[0-2])" required>
+                            :
+                            <input type="text" id="editMinute" placeholder="MM" maxlength="2" pattern="[0-5][0-9]" required>
+                            <select id="editAmpm" required>
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTruckerSelect">Trucker:</label>
+                        <select id="editTruckerSelect" required>
+                            <option value="">Select Trucker</option>
+                            <option value="DREAM">DREAM</option>
+                            <option value="LLEYTON">LLEYTON</option>
+                            <option value="AIR SPEED">AIR SPEED</option>
+                            <option value="PCL">PCL</option>
+                            <option value="FAST">FAST</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <div id="editTruckerOther" style="display:none; margin-top:5px;">
+                            <input type="text" id="editTruckerInput" placeholder="Specify Other">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPlateNo">Plate No.:</label>
+                        <input type="text" id="editPlateNo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCluster">Cluster:</label>
+                        <input type="text" id="editCluster" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCrates">Crates:</label>
+                        <input type="text" id="editCrates" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBo">BO:</label>
+                        <input type="text" id="editBo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBoCheckBySelect">BO Checked By:</label>
+                        <select id="editBoCheckBySelect" required>
+                            <option value="">Select</option>
+                            <option value="C.Datingaling">C.Datingaling</option>
+                            <option value="A. Gonzales">A. Gonzales</option>
+                            <option value="C. Factor">C. Factor</option>
+                            <option value="Others">Others</option>
+                        </select>
+                        <div id="editBoOther" style="display:none; margin-top:5px;">
+                            <input type="text" id="editBoInput" placeholder="Specify Other">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editRemarks">Remarks:</label>
+                        <textarea id="editRemarks"></textarea>
+                    </div>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+        <div id="removeModal" class="modal">
+            <div class="modal-content remove-modal-content">
+                <span class="close">&times;</span>
+                <h2>Confirm Removal</h2>
+                <p>Do you want to remove this entry?</p>
+                <div class="modal-actions">
+                    <button id="confirmRemove" class="action-btn confirm">Yes, Remove</button>
+                    <button id="cancelRemove" class="action-btn cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div id="clearAllModal" class="modal">
+            <div class="modal-content remove-modal-content">
+                <span class="close">&times;</span>
+                <h2>Confirm Clear All Data</h2>
+                <p>Do you want to clear all log entries? This action cannot be undone.</p>
+                <div class="modal-actions">
+                    <button id="confirmClearAll" class="action-btn confirm">Yes, Clear All</button>
+                    <button id="cancelClearAll" class="action-btn cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
